@@ -815,7 +815,7 @@ contains
              struct_c       = struct_c + struct_c_flux
              
              carbon_balance = carbon_balance - repro_c_flux
-             repro_c        = repro_c  +
+             repro_c        = repro_c  + repro_c_flux
 
 !             dbh            = c_pool(dbh_id)
 
