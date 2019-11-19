@@ -633,7 +633,11 @@ contains
     ! the plant has not been brought to be "on allometry", it thinks it has carbon
     ! left to allocate, and thus it must be on allometry when its not.
     ! -----------------------------------------------------------------------------------
-    
+!---------------------
+!---------------------
+! Growth turned off--
+!---------------------
+!---------------------
     if( carbon_balance > calloc_abs_error ) then
        
        ! This routine checks that actual carbon is not below that targets. It does
@@ -811,9 +815,9 @@ contains
              struct_c       = struct_c + struct_c_flux
              
              carbon_balance = carbon_balance - repro_c_flux
-             repro_c        = repro_c  + repro_c_flux
-             
-             dbh            = c_pool(dbh_id)
+             repro_c        = repro_c  +
+
+!             dbh            = c_pool(dbh_id)
 
              ! THESE HAVE TO BE SET OUTSIDE OF THIS ROUTINE
              !!          cohort%seed_prod = cohort%seed_prod + brepro_flux / hlm_freq_day
