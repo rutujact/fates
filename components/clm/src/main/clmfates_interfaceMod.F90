@@ -67,7 +67,7 @@ module CLMFatesInterfaceMod
    use clm_varpar        , only : i_met_lit, i_cel_lit, i_lig_lit
    use PhotosynthesisType , only : photosyns_type
    Use TopounitDataType  , only : topounit_atmospheric_flux, topounit_atmospheric_state
-   use atm2lndType       , only : atm2lnd_type
+   use atm2lndType       , only : atm2lnd_type, use_prescribed_soil_water
    use SurfaceAlbedoType , only : surfalb_type
    use SolarAbsorbedType , only : solarabs_type
    use CNCarbonFluxType  , only : carbonflux_type
@@ -670,7 +670,13 @@ contains
             this%fates(nc)%bc_in(s)%watres_sisl(1:nlevsoil) = spval !soilstate_inst%watres_col(c,1:nlevsoil)
             this%fates(nc)%bc_in(s)%sucsat_sisl(1:nlevsoil) = soilstate_inst%sucsat_col(c,1:nlevsoil)
             this%fates(nc)%bc_in(s)%bsw_sisl(1:nlevsoil)    = soilstate_inst%bsw_col(c,1:nlevsoil)
-            this%fates(nc)%bc_in(s)%h2o_liq_sisl(1:nlevsoil) =  col_ws%h2osoi_liq(c,1:nlevsoil)
+ 
+            if (use_prescribed_soil_water) then
+              this%fates(nc)%bc_in(s)%h2o_liq_sisl(1:nlevsoil) = atm2lnd_inst%forc_swc_not_elm_swc_col(c,1:nlevsoil)
+            else
+              this%fates(nc)%bc_in(s)%h2o_liq_sisl(1:nlevsoil) = col_ws%h2osoi_liq(c,1:nlevsoil)
+            end if 
+
          end if
          
 
@@ -1303,8 +1309,13 @@ contains
                  this%fates(nc)%bc_in(s)%bsw_sisl(1:nlevsoil) = &
                       soilstate_inst%bsw_col(c,1:nlevsoil)
 
-                 this%fates(nc)%bc_in(s)%h2o_liq_sisl(1:nlevsoil) = &
-                      col_ws%h2osoi_liq(c,1:nlevsoil)
+                 if(use_prescribed_soil_water) then
+                     this%fates(nc)%bc_in(s)%h2o_liq_sisl(1:nlevsoil) = & 
+                        atm2lnd_inst%forc_swc_not_elm_swc_col(c,1:nlevsoil)
+                 else
+                     this%fates(nc)%bc_in(s)%h2o_liq_sisl(1:nlevsoil) = &
+                        col_ws%h2osoi_liq(c,1:nlevsoil)
+                 end if     
 
                  this%fates(nc)%bc_in(s)%hksat_sisl(1:nlevsoil) = &
                        soilstate_inst%hksat_col(c,1:nlevsoil)
@@ -1604,7 +1615,13 @@ contains
 
                  ! Non-fates places a maximum (which is a negative upper bound) on smp
 
-                 this%fates(nc)%bc_in(s)%smp_sl(j)           = smp_node
+                  if (use_prescribed_soil_water) then
+                     this%fates(nc)%bc_in(s)%smp_sl(j)           = &
+                        ! Converting MPa to mm as 1 MPa = 10,228 cm of water
+                        atm2lnd_inst%forc_swp_not_elm_swp_col(c,j)*102280
+                  else
+                     this%fates(nc)%bc_in(s)%smp_sl(j)           = smp_node
+                  end if 
               end if
            end do
         end do
@@ -2446,8 +2463,15 @@ contains
             soilstate_inst%sucsat_col(c,1:nlevsoil)
       this%fates(nc)%bc_in(s)%bsw_sisl(1:nlevsoil)        = &
             soilstate_inst%bsw_col(c,1:nlevsoil)
-      this%fates(nc)%bc_in(s)%h2o_liq_sisl(1:nlevsoil)    = &
+
+      if (use_prescribed_soil_water) then
+         this%fates(nc)%bc_in(s)%h2o_liq_sisl(1:nlevsoil) = &
+            atm2lnd_inst%forc_swc_not_elm_swc_col(c,1:nlevsoil)
+      else
+         this%fates(nc)%bc_in(s)%h2o_liq_sisl(1:nlevsoil) = &
             col_ws%h2osoi_liq(c,1:nlevsoil)
+      end if 
+
       this%fates(nc)%bc_in(s)%eff_porosity_sl(1:nlevsoil) = &
             soilstate_inst%eff_porosity_col(c,1:nlevsoil)
 
