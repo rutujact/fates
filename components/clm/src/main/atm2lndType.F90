@@ -90,6 +90,10 @@ module atm2lndType
      real(r8), pointer :: forc_snow_not_downscaled_grc  (:)   => null() ! not downscaled atm snow rate [mm/s]                       
      real(r8), pointer :: forc_lwrad_not_downscaled_grc (:)   => null() ! not downscaled atm downwrd IR longwave radiation (W/m**2) 
 
+     ! Prescribed soil water not ELM soil water
+     real(r8), pointer :: forc_swc_not_elm_swc_col      (:,:) => null() ! not generated from ELM; equivalent to watsat_col (:,:) ! col volumetric soil water at saturation (porosity)                       
+     real(r8), pointer :: forc_swp_not_elm_swp_col      (:,:) => null() ! not generated from ELM; equivalent to soilpsi_col (:,:) ! col soil water potential in each soil layer (MPa) (CN)                   
+
      ! atm->lnd downscaled
      real(r8), pointer :: forc_t_downscaled_col         (:)   => null() ! downscaled atm temperature (Kelvin)
      real(r8), pointer :: forc_th_downscaled_col        (:)   => null() ! downscaled atm potential temperature (Kelvin)
@@ -142,6 +146,8 @@ module atm2lndType
 
   end type atm2lnd_type
   !----------------------------------------------------
+
+  logical, public, parameter :: use_prescribed_soil_water = .true.   !use prescribed soil water or not
 
 contains
 
@@ -226,6 +232,10 @@ contains
     allocate(this%forc_po2_grc                  (begg:endg))        ; this%forc_po2_grc                  (:)   = ival
     allocate(this%forc_aer_grc                  (begg:endg,14))     ; this%forc_aer_grc                  (:,:) = ival
     allocate(this%forc_pch4_grc                 (begg:endg))        ; this%forc_pch4_grc                 (:)   = ival
+
+    ! Prescribed soil water not ELM soil water
+    allocate(this%forc_swc_not_elm_swc_col  (begc:endc, nlevsoilfl)); this%forc_swc_not_elm_swc_col      (:)   = ival
+    allocate(this%forc_swc_not_elm_swc_col  (begc:endc, nlevsoilfl)); this%forc_swc_not_elm_swc_col      (:)   = ival
 
     ! atm->lnd not downscaled
     allocate(this%forc_t_not_downscaled_grc     (begg:endg))        ; this%forc_t_not_downscaled_grc     (:)   = ival
@@ -373,6 +383,19 @@ contains
     call hist_addfld1d (fname='LWdown', units='W/m^2',  &
          avgflag='A', long_name='atmospheric longwave radiation', &
          ptr_gcell=this%forc_lwrad_not_downscaled_grc, default='inactive')
+
+    if (use_prescribed_soil_water) then   
+      this%forc_swc_not_elm_swc_col(begc:endc, nlevsoilfl) = spval
+      call hist_addfld1d (fname='SWC_prescribed', units='porosity',  &
+          avgflag='A', long_name='soil water content in each soil layer', &
+          ptr_lnd=this%forc_swc_not_elm_swc)
+
+      this%forc_swp_not_elm_swp_col(begc:endc, nlevsoilfl) = spval
+      call hist_addfld1d (fname='SOILPSI_prescribed', units='MPa',  &
+          avgflag='A', long_name='soil water potential in each soil layer', &
+          ptr_lnd=this%forc_swp_not_elm_swp)
+    end if  
+
 
 !    this%forc_rain_not_downscaled_grc(begg:endg) = spval
 !    call hist_addfld1d (fname='RAIN', units='mm/s',  &
