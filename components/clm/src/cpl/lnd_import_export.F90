@@ -5,7 +5,7 @@ module lnd_import_export
   use decompmod    , only: bounds_type
   use lnd2atmType  , only: lnd2atm_type
   use lnd2glcMod   , only: lnd2glc_type
-  use atm2lndType  , only: atm2lnd_type
+  use atm2lndType  , only: atm2lnd_type, use_prescribed_soil_water
   use glc2lndMod   , only: glc2lnd_type
   use GridcellType , only: grc_pp          ! for access to gridcell topology
   use TopounitDataType , only: top_as, top_af  ! atmospheric state and flux variables  
@@ -236,6 +236,32 @@ contains
           if (atm2lnd_vars%metsource .ne. 5) metvars(5) = 'PRECTmms'
           if (atm2lnd_vars%metsource .ne. 5) metvars(6) = 'WIND'
           metvars(7) = 'FLDS'
+
+          if (use_prescribed_soil_water) then
+                metvars(8) = 'SWC_1'
+                metvars(9) = 'SWC_2'
+                metvars(10) = 'SWC_3'
+                metvars(11) = 'SWC_4'
+                metvars(12) = 'SWC_5'
+                metvars(13) = 'SWC_6'
+                metvars(14) = 'SWC_7'
+                metvars(15) = 'SWC_8'
+                metvars(16) = 'SWC_9'
+                metvars(17) = 'SWC_10'
+
+                metvars(18) = 'SWP_1'
+                metvars(19) = 'SWP_2'
+                metvars(20) = 'SWP_3'
+                metvars(21) = 'SWP_4'
+                metvars(22) = 'SWP_5'
+                metvars(23) = 'SWP_6'
+                metvars(24) = 'SWP_7'
+                metvars(25) = 'SWP_8'
+                metvars(26) = 'SWP_9'
+                metvars(27) = 'SWP_10'
+          end if
+
+
           if (atm2lnd_vars%metsource .eq. 5) then 
               metvars(4) = 'SWNDF'
               metvars(5) = 'RAINC'
@@ -537,6 +563,27 @@ contains
                                                      atm2lnd_vars%add_offsets(3))*wt1(3) + (atm2lnd_vars%atm_input(3,g,1,tindex(3,2)) &
                                                      *atm2lnd_vars%scale_factors(3)+atm2lnd_vars%add_offsets(3))*wt2(3)) * &
                                                      atm2lnd_vars%var_mult(3,g,mon) + atm2lnd_vars%var_offset(3,g,mon), 1e-9_r8)
+
+
+        !Prescribed soil water
+
+        if(use_prescribed_soil_water) then
+          do j = 1,nlevsoil
+
+            atm2lnd_vars%forc_swc_not_elm_swc_col(c,j) =
+            max(((atm2lnd_vars%atm_input(7+j,g,1,tindex(7+j,1))*atm2lnd_vars%scale_factors(7+j)+ &
+            atm2lnd_vars%add_offsets(7+j))*wt1(7+j) + (atm2lnd_vars%atm_input(7+j,g,1,tindex(7+j,2)) &
+            *atm2lnd_vars%scale_factors(7+j)+atm2lnd_vars%add_offsets(7+j))*wt2(7+j)) * &
+            atm2lnd_vars%var_mult(7+j,g,mon) + atm2lnd_vars%var_offset(7+j,g,mon), 1e-9_r8)
+
+            atm2lnd_vars%forc_swp_not_elm_swp_col(c,j) =
+            max(((atm2lnd_vars%atm_input(17+j,g,1,tindex(17+j,1))*atm2lnd_vars%scale_factors(17+j)+ &
+            atm2lnd_vars%add_offsets(17+j))*wt1(17+j) + (atm2lnd_vars%atm_input(17+j,g,1,tindex(17+j,2)) &
+            *atm2lnd_vars%scale_factors(17+j)+atm2lnd_vars%add_offsets(17+j))*wt2(17+j)) * &
+            atm2lnd_vars%var_mult(17+j,g,mon) + atm2lnd_vars%var_offset(17+j,g,mon), 1e-9_r8)
+
+          end do
+        end if
 
         if (atm2lnd_vars%metsource == 2) then  !convert RH to qbot						     
           if (tbot > SHR_CONST_TKFRZ) then
