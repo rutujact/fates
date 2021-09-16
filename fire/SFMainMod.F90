@@ -907,6 +907,9 @@ contains
              if (EDPftvarcon_inst%woody(currentCohort%pft) == 1) then !trees only
                 ! Flames lower than bottom of canopy. 
                 ! c%hite is height of cohort
+                crown_depth    = currentCohort%hite*EDPftvarcon_inst%crown(currentCohort%pft) 
+                height_cbb     = currentCohort%hite - crown_depth
+
                 if (currentPatch%SH < (currentCohort%hite-currentCohort%hite*EDPftvarcon_inst%crown(currentCohort%pft))) then 
                    currentCohort%fraction_crown_burned = 0.0_r8
                 else
