@@ -902,11 +902,17 @@ contains
 
           currentCohort=>currentPatch%tallest
 
+          currentCohort%crown_depth    =  0.0_r8   ! depth of crown (m)
+          currentCohort%height_cbb     =  0.0_r8   ! clear branch bole height or crown base height (m)
+
           do while(associated(currentCohort))  
              currentCohort%fraction_crown_burned = 0.0_r8
              if (EDPftvarcon_inst%woody(currentCohort%pft) == 1) then !trees only
                 ! Flames lower than bottom of canopy. 
                 ! c%hite is height of cohort
+                currentCohort%crown_depth    = currentCohort%hite*EDPftvarcon_inst%crown(currentCohort%pft) 
+                currentCohort%height_cbb     = currentCohort%hite - crown_depth
+
                 if (currentPatch%SH < (currentCohort%hite-currentCohort%hite*EDPftvarcon_inst%crown(currentCohort%pft))) then 
                    currentCohort%fraction_crown_burned = 0.0_r8
                 else
