@@ -911,7 +911,7 @@ contains
                 ! Flames lower than bottom of canopy. 
                 ! c%hite is height of cohort
                 currentCohort%crown_depth    = currentCohort%hite*EDPftvarcon_inst%crown(currentCohort%pft) 
-                currentCohort%hite_cbb     = currentCohort%hite - crown_depth
+                currentCohort%hite_cbb     = currentCohort%hite - currentCohort%crown_depth
 
                 if (currentPatch%SH < (currentCohort%hite-currentCohort%hite*EDPftvarcon_inst%crown(currentCohort%pft))) then 
                    currentCohort%fraction_crown_burned = 0.0_r8
