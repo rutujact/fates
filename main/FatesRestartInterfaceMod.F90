@@ -713,6 +713,14 @@ contains
          long_name='ed cohort - plant height', units='m', flushval = flushzero, &
          hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index = ir_height_co )
 
+    call this%set_restart_var(vname='fates_height_cbb', vtype=cohort_r8, &
+         long_name='ed cohort - plant height at the base of canopy', units='m', flushval = flushzero, &
+         hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index =ir_height_cbb_co)
+
+    call this%set_restart_var(vname='fates_c_area', vtype=cohort_r8, &
+         long_name='ed cohort - crown area per cohort', units='m2', flushval = flushzero, &
+         hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index=ir_c_area_co)
+
     call this%set_restart_var(vname='fates_laimemory', vtype=cohort_r8, &
          long_name='ed cohort - target leaf biomass set from prev year', &
          units='kgC/indiv', flushval = flushzero, &
@@ -1488,6 +1496,8 @@ contains
            rio_dbh_co                  => this%rvars(ir_dbh_co)%r81d, &
            rio_g_sb_laweight_co        => this%rvars(ir_g_sb_laweight_co)%r81d, &
            rio_height_co               => this%rvars(ir_height_co)%r81d, &
+           rio_height_cbb_co           => this%rvars(ir_height_cbb_co)%r81d, &
+           rio_c_area_co               => this%rvars(ir_c_area_co)%r81d, & 
            rio_laimemory_co            => this%rvars(ir_laimemory_co)%r81d, &
            rio_nplant_co               => this%rvars(ir_nplant_co)%r81d, &
            rio_gpp_acc_co              => this%rvars(ir_gpp_acc_co)%r81d, &
@@ -1674,6 +1684,8 @@ contains
                 rio_size_class_lasttimestep(io_idx_co) = ccohort%size_class_lasttimestep
                 rio_dbh_co(io_idx_co)          = ccohort%dbh
                 rio_height_co(io_idx_co)       = ccohort%hite
+                rio_height_cbb_co(io_idx_co)   = ccohort%hite_cbb
+                rio_c_area_co(io_idx_co)       = ccohort%c_area
                 rio_laimemory_co(io_idx_co)    = ccohort%laimemory
                 rio_g_sb_laweight_co(io_idx_co)= ccohort%g_sb_laweight
 
@@ -2193,6 +2205,8 @@ contains
           rio_dbh_co                  => this%rvars(ir_dbh_co)%r81d, &
           rio_g_sb_laweight_co        => this%rvars(ir_g_sb_laweight_co)%r81d, &
           rio_height_co               => this%rvars(ir_height_co)%r81d, &
+          rio_height_cbb_co           => this%rvars(ir_height_cbb_co)%r81d, &
+          rio_c_area_co               => this%rvars(ir_c_area_co)%r81d &
           rio_laimemory_co            => this%rvars(ir_laimemory_co)%r81d, &
           rio_nplant_co               => this%rvars(ir_nplant_co)%r81d, &
           rio_gpp_acc_co              => this%rvars(ir_gpp_acc_co)%r81d, &
@@ -2343,6 +2357,8 @@ contains
                 ccohort%dbh          = rio_dbh_co(io_idx_co)
                 ccohort%g_sb_laweight= rio_g_sb_laweight_co(io_idx_co)
                 ccohort%hite         = rio_height_co(io_idx_co)
+                ccohort%hite_cbb     = rio_height_cbb_co(io_idx_co)
+                ccohort%c_area       = rio_c_area_co(io_idx_co)       
                 ccohort%laimemory    = rio_laimemory_co(io_idx_co)
                 ccohort%n            = rio_nplant_co(io_idx_co)
                 ccohort%gpp_acc      = rio_gpp_acc_co(io_idx_co)
