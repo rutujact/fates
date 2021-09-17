@@ -895,6 +895,8 @@ contains
     type(ed_patch_type) , pointer :: currentPatch
     type(ed_cohort_type), pointer :: currentCohort
 
+    real(r8) :: crown_depth       ! depth of crown (m)
+
     currentPatch => currentSite%oldest_patch
 
     do while(associated(currentPatch)) 
@@ -902,7 +904,6 @@ contains
 
           currentCohort=>currentPatch%tallest
 
-          currentCohort%crown_depth    =  0.0_r8   ! depth of crown (m)
           currentCohort%hite_cbb     =  0.0_r8   ! clear branch bole height or crown base height (m)
 
           do while(associated(currentCohort))  
@@ -910,8 +911,8 @@ contains
              if (EDPftvarcon_inst%woody(currentCohort%pft) == 1) then !trees only
                 ! Flames lower than bottom of canopy. 
                 ! c%hite is height of cohort
-                currentCohort%crown_depth    = currentCohort%hite*EDPftvarcon_inst%crown(currentCohort%pft) 
-                currentCohort%hite_cbb     = currentCohort%hite - currentCohort%crown_depth
+                crown_depth    = currentCohort%hite*EDPftvarcon_inst%crown(currentCohort%pft) 
+                currentCohort%hite_cbb     = currentCohort%hite - crown_depth
 
                 if (currentPatch%SH < (currentCohort%hite-currentCohort%hite*EDPftvarcon_inst%crown(currentCohort%pft))) then 
                    currentCohort%fraction_crown_burned = 0.0_r8

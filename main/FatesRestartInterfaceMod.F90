@@ -100,6 +100,12 @@ module FatesRestartInterfaceMod
   integer :: ir_dbh_co
   integer :: ir_g_sb_laweight_co
   integer :: ir_height_co
+  integer :: ir_height_cbb_co
+  integer :: ir_c_area_co
+  integer :: ir_leaf_litter_c_co
+  integer :: ir_bleaf_co
+  integer :: ir_bdead_co
+  integer :: ir_bsap_co
   integer :: ir_laimemory_co
   integer :: ir_nplant_co
   integer :: ir_gpp_acc_co
@@ -718,8 +724,24 @@ contains
          hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index =ir_height_cbb_co)
 
     call this%set_restart_var(vname='fates_c_area', vtype=cohort_r8, &
-         long_name='ed cohort - crown area per cohort', units='m2', flushval = flushzero, &
+         long_name='ed cohort - areal extent of canopy per cohort', units='m2', flushval = flushzero, &
          hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index=ir_c_area_co)
+
+    call this%set_restart_var(vname='fates_leaf_litter_c', vtype=cohort_r8, &
+         long_name='ed cohort - canopy leaf biomass', units='kgC', flushval = flushzero, &
+         hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index=ir_leaf_litter_c_co)
+
+    call this%set_restart_var(vname='fates_bleaf', vtype=cohort_r8, &
+         long_name='ed cohort - canopy leaf biomass', units='kgC', flushval = flushzero, &
+         hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index=ir_bleaf_co)
+
+    call this%set_restart_var(vname='fates_bdead', vtype=cohort_r8, &
+         long_name='ed cohort - biomass (above and below) in the structural pool = agbw + bgbw - bsap', units='kgC', flushval = flushzero, &
+         hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index=ir_bdead_co)
+
+    call this%set_restart_var(vname='fates_bsap', vtype=cohort_r8, &
+         long_name='ed cohort - biomass in sapwood (above and below)', units='kgC', flushval = flushzero, &
+         hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index=ir_bsap_co)
 
     call this%set_restart_var(vname='fates_laimemory', vtype=cohort_r8, &
          long_name='ed cohort - target leaf biomass set from prev year', &
@@ -1498,6 +1520,10 @@ contains
            rio_height_co               => this%rvars(ir_height_co)%r81d, &
            rio_height_cbb_co           => this%rvars(ir_height_cbb_co)%r81d, &
            rio_c_area_co               => this%rvars(ir_c_area_co)%r81d, & 
+           rio_leaf_litter_c_co        => this%rvars(ir_leaf_litter_c_co)%r81d, &
+           rio_bleaf_co                => this%rvars(ir_bleaf_co)%r81d, &
+           rio_bdead_co                => this%rvars(ir_bdead_co)%r81d, &
+           rio_bsap_co                => this%rvars(ir_bsap_co)%r81d, &
            rio_laimemory_co            => this%rvars(ir_laimemory_co)%r81d, &
            rio_nplant_co               => this%rvars(ir_nplant_co)%r81d, &
            rio_gpp_acc_co              => this%rvars(ir_gpp_acc_co)%r81d, &
@@ -1686,6 +1712,10 @@ contains
                 rio_height_co(io_idx_co)       = ccohort%hite
                 rio_height_cbb_co(io_idx_co)   = ccohort%hite_cbb
                 rio_c_area_co(io_idx_co)       = ccohort%c_area
+                rio_leaf_litter_c_co(io_idx_co)  = ccohort%leaf_litter_c
+                rio_bleaf_co(io_idx_co)        = ccohort%bleaf
+                rio_bdead_co(io_idx_co)        = ccohort%bdead
+                rio_bsap_co(io_idx_co)         = ccohort%bsap
                 rio_laimemory_co(io_idx_co)    = ccohort%laimemory
                 rio_g_sb_laweight_co(io_idx_co)= ccohort%g_sb_laweight
 
@@ -2206,7 +2236,11 @@ contains
           rio_g_sb_laweight_co        => this%rvars(ir_g_sb_laweight_co)%r81d, &
           rio_height_co               => this%rvars(ir_height_co)%r81d, &
           rio_height_cbb_co           => this%rvars(ir_height_cbb_co)%r81d, &
-          rio_c_area_co               => this%rvars(ir_c_area_co)%r81d &
+          rio_c_area_co               => this%rvars(ir_c_area_co)%r81d, &
+          rio_leaf_litter_c_co        => this%rvars(ir_leaf_litter_c_co)%r81d, &
+          rio_bleaf_co                => this%rvars(ir_bleaf_co)%r81d, &
+          rio_bdead_co                => this%rvars(ir_bdead_co)%r81d, &
+          rio_bsap_co                 => this%rvars(ir_bsap_co)%r81d, &
           rio_laimemory_co            => this%rvars(ir_laimemory_co)%r81d, &
           rio_nplant_co               => this%rvars(ir_nplant_co)%r81d, &
           rio_gpp_acc_co              => this%rvars(ir_gpp_acc_co)%r81d, &
@@ -2359,7 +2393,10 @@ contains
                 ccohort%hite         = rio_height_co(io_idx_co)
                 ccohort%hite_cbb     = rio_height_cbb_co(io_idx_co)
                 ccohort%c_area       = rio_c_area_co(io_idx_co)       
-                ccohort%laimemory    = rio_laimemory_co(io_idx_co)
+                ccohort%leaf_litter_c= rio_leaf_litter_c_co(io_idx_co)
+                ccohort%bleaf        = rio_bleaf_co(io_idx_co)
+                ccohort%bdead        = rio_bdead_co(io_idx_co)
+                ccohort%bsap         = rio_bsap_co(io_idx_co)
                 ccohort%n            = rio_nplant_co(io_idx_co)
                 ccohort%gpp_acc      = rio_gpp_acc_co(io_idx_co)
                 ccohort%npp_acc      = rio_npp_acc_co(io_idx_co)

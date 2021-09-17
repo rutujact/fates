@@ -202,6 +202,7 @@ module EDTypesMod
      real(r8) ::  n                                      ! number of individuals in cohort per 'area' (10000m2 default)
      real(r8) ::  dbh                                    ! dbh: cm
      real(r8) ::  hite                                   ! height: meters
+     real(r8) ::  hite_cbb                               ! height of the base of canopy: meters
      integer  ::  indexnumber                            ! unique number for each cohort. (within clump?)
      real(r8) ::  laimemory                              ! target leaf biomass- set from previous year: kGC per indiv
      real(r8) ::  sapwmemory                             ! target sapwood biomass- set from previous year: kGC per indiv
@@ -856,6 +857,7 @@ module EDTypesMod
      write(fates_log(),*) 'co%n                      = ', ccohort%n                         
      write(fates_log(),*) 'co%dbh                    = ', ccohort%dbh                                        
      write(fates_log(),*) 'co%hite                   = ', ccohort%hite
+     write(fates_log(),*) 'co%hite_cbb               = ', ccohort%hite_cbb
      write(fates_log(),*) 'co%laimemory              = ', ccohort%laimemory
      write(fates_log(),*) 'co%sapwmemory             = ', ccohort%sapwmemory
      write(fates_log(),*) 'co%structmemory           = ', ccohort%structmemory
