@@ -517,8 +517,6 @@ contains
     currentCohort%c13disc_clm        = nan ! C13 discrimination, per mil at indiv/timestep
     currentCohort%c13disc_acc        = nan ! C13 discrimination, per mil at indiv/timestep at indiv/daily at the end of a day
 
-    currentCohort%leaf_litter_c      = nan ! Leaf litter C. kgC/cohort
-
     !RESPIRATION
     currentCohort%rdark              = nan
     currentCohort%resp_m             = nan ! Maintenance respiration.  kGC/cohort/year
@@ -614,7 +612,6 @@ contains
     currentcohort%cambial_mort       = 0._r8
     currentCohort%c13disc_clm        = 0._r8 
     currentCohort%c13disc_acc        = 0._r8
-    currentCohort%leaf_litter_c      = 0._r8
   end subroutine zero_cohort
 
   !-------------------------------------------------------------------------------------!
@@ -757,8 +754,6 @@ contains
                      * SF_val_CWD_frac(c) * (1.0_r8 -  EDPftvarcon_inst%allom_agb_frac(currentCohort%pft)) 
              enddo
 
-             currentCohort%leaf_litter_c = leaf_c
- 
              currentPatch%leaf_litter(currentCohort%pft) = currentPatch%leaf_litter(currentCohort%pft) + currentCohort%n* &
                   (leaf_c)/currentPatch%area
 
