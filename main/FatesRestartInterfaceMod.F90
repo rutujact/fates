@@ -103,8 +103,7 @@ module FatesRestartInterfaceMod
   integer :: ir_height_cbb_co
   integer :: ir_c_area_co
   integer :: ir_bleaf_co
-  integer :: ir_bdead_co
-  integer :: ir_bsap_co
+  integer :: ir_bagw_co
   integer :: ir_laimemory_co
   integer :: ir_nplant_co
   integer :: ir_gpp_acc_co
@@ -730,13 +729,9 @@ contains
          long_name='ed cohort - canopy leaf biomass', units='kgC', flushval = flushzero, &
          hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index=ir_bleaf_co)
 
-    call this%set_restart_var(vname='fates_bdead', vtype=cohort_r8, &
-         long_name='ed cohort - biomass (above and below) in the structural pool = agbw + bgbw - bsap', units='kgC', flushval = flushzero, &
-         hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index=ir_bdead_co)
-
-    call this%set_restart_var(vname='fates_bsap', vtype=cohort_r8, &
-         long_name='ed cohort - biomass in sapwood (above and below)', units='kgC', flushval = flushzero, &
-         hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index=ir_bsap_co)
+    call this%set_restart_var(vname='fates_bagw', vtype=cohort_r8, &
+         long_name='ed cohort - Total above ground biomass', units='kgC', flushval = flushzero, &
+         hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index=ir_bagw_co)
 
     call this%set_restart_var(vname='fates_laimemory', vtype=cohort_r8, &
          long_name='ed cohort - target leaf biomass set from prev year', &
@@ -1266,7 +1261,7 @@ contains
     
     
     use FatesIOVariableKindMod, only : cohort_r8
-    
+ 
     class(fates_restart_interface_type) :: this
     character(*),intent(in) :: symbol_base    ! Symbol name without position
     character(*),intent(in) :: vtype          ! String defining variable type 
@@ -1430,6 +1425,9 @@ contains
    use EDTypesMod, only : maxSWb
    use EDTypesMod, only : numWaterMem
    use EDTypesMod, only : num_vegtemp_mem
+   use FatesAllometryMod         , only : bleaf      ! Generic actual leaf biomass wrapper
+   use FatesAllometryMod         , only : bagw_allom ! Generic AGWB (above grnd.woody bio) wrapper
+   use EDPFTvarcon               , only : EDPftvarcon_inst
 
     ! Arguments
     class(fates_restart_interface_type)             :: this
@@ -1473,10 +1471,13 @@ contains
     integer  :: i_scls           ! loop counter for size-class
     integer  :: i_pft            ! loop counter for pft
 
+    real(r8) :: b_agw      ! biomass above ground non-leaf [kgC]
+    real(r8) :: b_leaf     ! biomass in leaves [kgC]
+
+
     type(fates_restart_variable_type) :: rvar
     type(ed_patch_type),pointer  :: cpatch
     type(ed_cohort_type),pointer :: ccohort
-
 
     associate( rio_npatch_si           => this%rvars(ir_npatch_si)%int1d, &
            rio_old_stock_si            => this%rvars(ir_oldstock_si)%r81d, &
@@ -1516,8 +1517,7 @@ contains
            rio_height_cbb_co           => this%rvars(ir_height_cbb_co)%r81d, &
            rio_c_area_co               => this%rvars(ir_c_area_co)%r81d, & 
            rio_bleaf_co                => this%rvars(ir_bleaf_co)%r81d, &
-           rio_bdead_co                => this%rvars(ir_bdead_co)%r81d, &
-           rio_bsap_co                => this%rvars(ir_bsap_co)%r81d, &
+           rio_bagw_co                 => this%rvars(ir_bagw_co)%r81d, &
            rio_laimemory_co            => this%rvars(ir_laimemory_co)%r81d, &
            rio_nplant_co               => this%rvars(ir_nplant_co)%r81d, &
            rio_gpp_acc_co              => this%rvars(ir_gpp_acc_co)%r81d, &
@@ -1698,6 +1698,16 @@ contains
 
                 end if
 
+                ! Calculate the leaf biomass (calculates a maximum first, then applies
+                ! canopy trim
+                ! and sla scaling factors)
+
+                call bleaf(ccohort%dbh, ccohort%pft, ccohort%canopy_trim, b_leaf)
+
+                ! Calculate total above-ground biomass from allometry
+
+                call bagw_allom(ccohort%dbh, ccohort%pft, b_agw)
+
                 rio_canopy_layer_co(io_idx_co) = ccohort%canopy_layer
                 rio_canopy_layer_yesterday_co(io_idx_co) = ccohort%canopy_layer_yesterday
                 rio_canopy_trim_co(io_idx_co)  = ccohort%canopy_trim
@@ -1706,9 +1716,8 @@ contains
                 rio_height_co(io_idx_co)       = ccohort%hite
                 rio_height_cbb_co(io_idx_co)   = ccohort%hite_cbb
                 rio_c_area_co(io_idx_co)       = ccohort%c_area
-                rio_bleaf_co(io_idx_co)        = ccohort%bleaf
-                rio_bdead_co(io_idx_co)        = ccohort%bdead
-                rio_bsap_co(io_idx_co)         = ccohort%bsap
+                rio_bleaf_co(io_idx_co)        = b_leaf
+                rio_bagw_co(io_idx_co)         = b_agw
                 rio_laimemory_co(io_idx_co)    = ccohort%laimemory
                 rio_g_sb_laweight_co(io_idx_co)= ccohort%g_sb_laweight
 
@@ -2231,8 +2240,7 @@ contains
           rio_height_cbb_co           => this%rvars(ir_height_cbb_co)%r81d, &
           rio_c_area_co               => this%rvars(ir_c_area_co)%r81d, &
           rio_bleaf_co                => this%rvars(ir_bleaf_co)%r81d, &
-          rio_bdead_co                => this%rvars(ir_bdead_co)%r81d, &
-          rio_bsap_co                 => this%rvars(ir_bsap_co)%r81d, &
+          rio_bagw_co                 => this%rvars(ir_bagw_co)%r81d, &
           rio_laimemory_co            => this%rvars(ir_laimemory_co)%r81d, &
           rio_nplant_co               => this%rvars(ir_nplant_co)%r81d, &
           rio_gpp_acc_co              => this%rvars(ir_gpp_acc_co)%r81d, &
@@ -2386,8 +2394,7 @@ contains
                 ccohort%hite_cbb     = rio_height_cbb_co(io_idx_co)
                 ccohort%c_area       = rio_c_area_co(io_idx_co)       
                 ccohort%bleaf        = rio_bleaf_co(io_idx_co)
-                ccohort%bdead        = rio_bdead_co(io_idx_co)
-                ccohort%bsap         = rio_bsap_co(io_idx_co)
+                ccohort%bagw         = rio_bagw_co(io_idx_co)
                 ccohort%n            = rio_nplant_co(io_idx_co)
                 ccohort%gpp_acc      = rio_gpp_acc_co(io_idx_co)
                 ccohort%npp_acc      = rio_npp_acc_co(io_idx_co)

@@ -269,8 +269,7 @@ module EDTypesMod
      real(r8) ::  c13disc_acc         ! carbon 13 discrimination in new synthesized carbon: part-per-mil, at each indiv/day, at the end of a day
 
      real(r8) ::  bleaf 
-     real(r8) ::  bdead
-     real(r8) ::  bsap
+     real(r8) ::  bagw
  
      ! The following four biophysical rates are assumed to be
      ! at the canopy top, at reference temp 25C, and based on the 
