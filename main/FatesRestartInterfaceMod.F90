@@ -99,6 +99,7 @@ module FatesRestartInterfaceMod
   integer :: ir_coage_co
   integer :: ir_g_sb_laweight_co
   integer :: ir_height_co
+  integer :: ir_crown_depth_co
   integer :: ir_laimemory_co
   integer :: ir_sapwmemory_co
   integer :: ir_structmemory_co
@@ -699,6 +700,10 @@ contains
     call this%set_restart_var(vname='fates_height', vtype=cohort_r8, &
          long_name='ed cohort - plant height', units='m', flushval = flushzero, &
          hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index = ir_height_co )
+
+    call this%set_restart_var(vname='fates_crown_depth', vtype=cohort_r8, &
+         long_name='ed cohort - plant crown depth', units='m', flushval = flushzero, &
+         hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index =ir_crown_depth_co )
 
     call this%set_restart_var(vname='fates_laimemory', vtype=cohort_r8, &
          long_name='ed cohort - target leaf biomass set from prev year', &
@@ -1667,6 +1672,7 @@ contains
            rio_coage_co                => this%rvars(ir_coage_co)%r81d, &
            rio_g_sb_laweight_co        => this%rvars(ir_g_sb_laweight_co)%r81d, &
            rio_height_co               => this%rvars(ir_height_co)%r81d, &
+           rio_crown_depth_co          => this%rvars(ir_crown_depth_co)%r81d, &
            rio_laimemory_co            => this%rvars(ir_laimemory_co)%r81d, &
            rio_sapwmemory_co           => this%rvars(ir_sapwmemory_co)%r81d, &
            rio_structmemory_co         => this%rvars(ir_structmemory_co)%r81d, &
@@ -1895,6 +1901,7 @@ contains
                 rio_dbh_co(io_idx_co)          = ccohort%dbh
                 rio_coage_co(io_idx_co)        = ccohort%coage
                 rio_height_co(io_idx_co)       = ccohort%hite
+                rio_crown_depth_co(io_idx_co)  = ccohort%crown_depth
                 rio_laimemory_co(io_idx_co)    = ccohort%laimemory
                 rio_sapwmemory_co(io_idx_co)   = ccohort%sapwmemory
                 rio_structmemory_co(io_idx_co) = ccohort%structmemory
@@ -2485,6 +2492,7 @@ contains
           rio_coage_co                => this%rvars(ir_coage_co)%r81d, &
           rio_g_sb_laweight_co        => this%rvars(ir_g_sb_laweight_co)%r81d, &
           rio_height_co               => this%rvars(ir_height_co)%r81d, &
+          rio_crown_depth_co          => this%rvars(ir_crown_depth_co)%r81d, &
           rio_laimemory_co            => this%rvars(ir_laimemory_co)%r81d, &
           rio_sapwmemory_co           => this%rvars(ir_sapwmemory_co)%r81d, &
           rio_structmemory_co         => this%rvars(ir_structmemory_co)%r81d, &
@@ -2687,6 +2695,7 @@ contains
                 ccohort%coage        = rio_coage_co(io_idx_co)
                 ccohort%g_sb_laweight= rio_g_sb_laweight_co(io_idx_co)
                 ccohort%hite         = rio_height_co(io_idx_co)
+                ccohort%crown_depth  = rio_crown_depth_co(io_idx_co)
                 ccohort%laimemory    = rio_laimemory_co(io_idx_co)
                 ccohort%sapwmemory   = rio_sapwmemory_co(io_idx_co)
                 ccohort%structmemory= rio_structmemory_co(io_idx_co)

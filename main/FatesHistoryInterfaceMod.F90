@@ -2221,6 +2221,7 @@ end subroutine flush_hvars
 
                ! calculate leaf height distribution, assuming leaf area is evenly distributed thru crown depth
                call CrownDepth(ccohort%hite,ft,crown_depth)
+               ccohort%crown_depth = crown_depth  !for DRM
                height_bin_max = get_height_index(ccohort%hite)
                height_bin_min = get_height_index(ccohort%hite - crown_depth)
                do i_heightbin = height_bin_min, height_bin_max
