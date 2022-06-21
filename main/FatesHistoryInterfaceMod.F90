@@ -6911,6 +6911,26 @@ end subroutine update_history_hifrq
              use_default='inactive', &
              avgflag='A', vtype=site_size_pft_r8, hlms='CLM:ALM',     &
              upfreq=4, ivar=ivar, initialize=initialize_variables, index = ih_iterh2_scpf )
+       
+       call this%set_history_var(vname='FATES_ATH_SCPF', units='m3 m-3', &
+             long='absorbing root water content', use_default='inactive', &
+             avgflag='A', vtype=site_size_pft_r8, hlms='CLM:ALM', flushval=0.0_r8,    &
+             upfreq=4, ivar=ivar, initialize=initialize_variables, index = ih_ath_scpf )
+       
+       call this%set_history_var(vname='FATES_TTH_SCPF', units='m3 m-3', &
+             long='transporting root water content', use_default='inactive', &
+             avgflag='A', vtype=site_size_pft_r8, hlms='CLM:ALM', flushval=0.0_r8,    &
+             upfreq=4, ivar=ivar, initialize=initialize_variables, index =  ih_tth_scpf )
+       
+       call this%set_history_var(vname='FATES_STH_SCPF', units='m3 m-3', &
+             long='stem water contenet', use_default='active', &
+             avgflag='A', vtype=site_size_pft_r8, hlms='CLM:ALM', flushval=0.0_r8,    &
+             upfreq=4, ivar=ivar, initialize=initialize_variables, index = ih_sth_scpf )
+       
+       call this%set_history_var(vname='FATES_LTH_SCPF', units='m3 m-3', &
+             long='leaf water content', use_default='active', &
+             avgflag='A', vtype=site_size_pft_r8, hlms='CLM:ALM', flushval=0.0_r8,    &
+             upfreq=4, ivar=ivar, initialize=initialize_variables, index = ih_lth_scpf )
 
        call this%set_history_var(vname='FATES_ABSROOT_H2O_SZPF',               &
              units='m3 m-3',                                                   &
@@ -6949,6 +6969,16 @@ end subroutine update_history_hifrq
              use_default='inactive', avgflag='A', vtype=site_size_pft_r8,      &
              hlms='CLM:ALM', upfreq=4, ivar=ivar,                              &
              initialize=initialize_variables, index = ih_twp_scpf)
+
+       call this%set_history_var(vname='H2OVEG', units = 'kg/m2',               &
+             long='water stored inside vegetation tissues (leaf, stem, roots)', use_default='active',   &
+             avgflag='A', vtype=site_r8, hlms='CLM:ALM', flushval=0.0_r8,    &
+             upfreq=4, ivar=ivar, initialize=initialize_variables, index = ih_h2oveg_si )
+
+       call this%set_history_var(vname='H2OVEG_DEAD', units = 'kg/m2',               &
+             long='cumulative plant_stored_h2o in dead biomass due to mortality', use_default='active',   &
+             avgflag='A', vtype=site_r8, hlms='CLM:ALM', flushval=0.0_r8,    &
+             upfreq=1, ivar=ivar, initialize=initialize_variables, index = ih_h2oveg_dead_si )
 
        call this%set_history_var(vname='FATES_STEM_H2OPOT_SZPF', units='Pa',   &
              long='stem water potential by size class x pft',                  &
