@@ -6229,12 +6229,12 @@ end subroutine update_history_hifrq
              upfreq=4, ivar=ivar, initialize=initialize_variables, index =  ih_tth_scpf )
        
        call this%set_history_var(vname='FATES_STH_SCPF', units='m3 m-3', &
-             long='stem water contenet', use_default='inactive', &
+             long='stem water contenet', use_default='active', &
              avgflag='A', vtype=site_size_pft_r8, hlms='CLM:ALM', flushval=0.0_r8,    &
              upfreq=4, ivar=ivar, initialize=initialize_variables, index = ih_sth_scpf )
        
        call this%set_history_var(vname='FATES_LTH_SCPF', units='m3 m-3', &
-             long='leaf water content', use_default='inactive', &
+             long='leaf water content', use_default='active', &
              avgflag='A', vtype=site_size_pft_r8, hlms='CLM:ALM', flushval=0.0_r8,    &
              upfreq=4, ivar=ivar, initialize=initialize_variables, index = ih_lth_scpf )
 
@@ -6344,12 +6344,12 @@ end subroutine update_history_hifrq
             upfreq=4, ivar=ivar, initialize=initialize_variables, index = ih_rootuptake100_scpf )
 
        call this%set_history_var(vname='H2OVEG', units = 'kg/m2',               &
-             long='water stored inside vegetation tissues (leaf, stem, roots)', use_default='inactive',   &
+             long='water stored inside vegetation tissues (leaf, stem, roots)', use_default='active',   &
              avgflag='A', vtype=site_r8, hlms='CLM:ALM', flushval=0.0_r8,    &
              upfreq=4, ivar=ivar, initialize=initialize_variables, index = ih_h2oveg_si )
 
        call this%set_history_var(vname='H2OVEG_DEAD', units = 'kg/m2',               &
-             long='cumulative plant_stored_h2o in dead biomass due to mortality', use_default='inactive',   &
+             long='cumulative plant_stored_h2o in dead biomass due to mortality', use_default='active',   &
              avgflag='A', vtype=site_r8, hlms='CLM:ALM', flushval=0.0_r8,    &
              upfreq=1, ivar=ivar, initialize=initialize_variables, index = ih_h2oveg_dead_si )
 
