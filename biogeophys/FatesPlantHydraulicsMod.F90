@@ -2504,11 +2504,6 @@ subroutine hydraulics_bc ( nsites, sites, bc_in, bc_out, dtime)
 
            ccohort=>cpatch%tallest
            do while(associated(ccohort))
-             ! FOR DRM: Next if statement is to bypass hydro for grasses, since grasses create
-             ! numerical errors as all their stored water gets transpired at
-             ! 30min scale
-             if ( int(prt_params%woody(ccohort%pft)) == itrue) then !trees only
-
               ccohort_hydr => ccohort%co_hydr
               ft       = ccohort%pft
 
@@ -2661,7 +2656,6 @@ subroutine hydraulics_bc ( nsites, sites, bc_in, bc_out, dtime)
 
 
               ccohort => ccohort%shorter
-             endif !trees only 
            enddo !cohort
         endif ! not barground patch
         cpatch => cpatch%younger
