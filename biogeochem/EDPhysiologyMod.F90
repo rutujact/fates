@@ -807,7 +807,8 @@ contains
     !
     ! accumulate the GDD using daily mean temperatures
     ! Don't accumulate GDD during the growing season (that wouldn't make sense)
-    if (temp_in_C .gt. 0._r8 .and. currentSite%cstatus == phen_cstat_iscold) then
+    ! Junyan modified to add nevercold 
+    if (temp_in_C .gt. 0._r8 .and. (currentSite%cstatus == phen_cstat_iscold .or. currentSite%cstatus == phen_cstat_nevercold)) then  
        currentSite%grow_deg_days = currentSite%grow_deg_days + temp_in_C
     endif
 
@@ -903,7 +904,9 @@ contains
     ! plants from re-emerging in areas without at least some cold days
 
     if( (currentSite%cstatus == phen_cstat_notcold)  .and. &
-         (dayssincecleafoff > 400)) then           ! remove leaves after a whole year
+    !    (dayssincecleafoff > 400)) then           ! remove leaves after a whole year
+         (dayssincecleafoff > 40000)) then           !Junyan changed dayssinceleafoff > 400 to 40000 to disable this function, so the condition will never be met
+
        ! when there is no 'off' period.
        currentSite%grow_deg_days  = 0._r8
 
