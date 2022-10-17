@@ -1097,6 +1097,9 @@ contains
            ! it omits the last cohort (because it has already been compared by that point)
 
            do while ( .not.associated(currentCohort,currentPatch%shortest) )
+           
+              ! To turn off cohort fusion. If the plant is larger than a threshold DBH (e.g., 5 cm), this will skip it and go to the next cohort:
+              if(currentCohort%dbh>5._r8) cycle
 
               nextc => currentPatch%tallest
 
