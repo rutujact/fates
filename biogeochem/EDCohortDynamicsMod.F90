@@ -1564,7 +1564,7 @@ contains
            end if
 
 
-        if ( dynamic_size_fusion_tolerance .gt. 100._r8) then
+        if ( dynamic_size_fusion_tolerance .gt. 1000000._r8) then
               ! something has gone terribly wrong and we need to report what
               write(fates_log(),*) 'exceeded reasonable expectation of cohort fusion.'
               currentCohort => currentPatch%tallest
