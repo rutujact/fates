@@ -757,9 +757,9 @@ contains
          ! of memory for the cohort arrays
 
          if ( hlm_use_cohort_age_tracking .eq. itrue) then
-            maxCohortsPerPatch = 300
+            maxCohortsPerPatch = 1003000 !300
          else
-            maxCohortsPerPatch = 100
+            maxCohortsPerPatch = 1000000 !100
          end if
          
          ! These values are used to define the restart file allocations and general structure
