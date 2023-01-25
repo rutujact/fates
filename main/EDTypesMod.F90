@@ -222,6 +222,7 @@ module EDTypesMod
      real(r8) ::  dbh                                    ! dbh: cm
      real(r8) ::  coage                                  ! cohort age in years
      real(r8) ::  hite                                   ! height: meters
+     real(r8) ::  crown_depth                            ! height of the crown: meters !For DRM
      integer  ::  indexnumber                            ! unique number for each cohort. (within clump?)
      integer  ::  canopy_layer                           ! canopy status of cohort (1 = canopy, 2 = understorey, etc.)
      integer  ::  crowndamage                            ! crown damage class of the cohort [1: undamaged, >1: damaged]
@@ -1121,6 +1122,7 @@ module EDTypesMod
      write(fates_log(),*) 'co%dbh                    = ', ccohort%dbh                                        
      write(fates_log(),*) 'co%hite                   = ', ccohort%hite
      write(fates_log(),*) 'co%crowndamage            = ', ccohort%crowndamage
+     write(fates_log(),*) 'co%crown_depth            = ', ccohort%crown_depth
      write(fates_log(),*) 'co%coage                  = ', ccohort%coage
      write(fates_log(),*) 'co%l2fr                   = ', ccohort%l2fr
      write(fates_log(),*) 'leaf carbon               = ', ccohort%prt%GetState(leaf_organ,carbon12_element) 

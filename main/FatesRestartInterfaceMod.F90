@@ -121,6 +121,7 @@ module FatesRestartInterfaceMod
   integer :: ir_coage_co
   integer :: ir_g_sb_laweight_co
   integer :: ir_height_co
+  integer :: ir_crown_depth_co
   integer :: ir_nplant_co
   integer :: ir_gpp_acc_co
   integer :: ir_npp_acc_co
@@ -805,6 +806,10 @@ contains
     call this%set_restart_var(vname='fates_height', vtype=cohort_r8, &
          long_name='ed cohort - plant height', units='m', flushval = flushzero, &
          hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index = ir_height_co )
+
+    call this%set_restart_var(vname='fates_crown_depth', vtype=cohort_r8, &
+         long_name='ed cohort - plant crown depth', units='m', flushval = flushzero,
+         hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index =ir_crown_depth_co )
 
     call this%set_restart_var(vname='fates_nplant', vtype=cohort_r8, &
          long_name='ed cohort - number of plants in the cohort', &
@@ -1900,6 +1905,7 @@ contains
            rio_coage_co                => this%rvars(ir_coage_co)%r81d, &
            rio_g_sb_laweight_co        => this%rvars(ir_g_sb_laweight_co)%r81d, &
            rio_height_co               => this%rvars(ir_height_co)%r81d, &
+           rio_crown_depth_co          => this%rvars(ir_crown_depth_co)%r81d, &
            rio_nplant_co               => this%rvars(ir_nplant_co)%r81d, &
            rio_gpp_acc_co              => this%rvars(ir_gpp_acc_co)%r81d, &
            rio_npp_acc_co              => this%rvars(ir_npp_acc_co)%r81d, &
@@ -2143,6 +2149,7 @@ contains
                 rio_dbh_co(io_idx_co)          = ccohort%dbh
                 rio_coage_co(io_idx_co)        = ccohort%coage
                 rio_height_co(io_idx_co)       = ccohort%hite
+                rio_crown_depth_co(io_idx_co)  = ccohort%crown_depth
                 rio_g_sb_laweight_co(io_idx_co)= ccohort%g_sb_laweight
                 rio_nplant_co(io_idx_co)       = ccohort%n
                 rio_gpp_acc_co(io_idx_co)      = ccohort%gpp_acc
@@ -2790,6 +2797,7 @@ contains
           rio_coage_co                => this%rvars(ir_coage_co)%r81d, &
           rio_g_sb_laweight_co        => this%rvars(ir_g_sb_laweight_co)%r81d, &
           rio_height_co               => this%rvars(ir_height_co)%r81d, &
+          rio_crown_depth_co          => this%rvars(ir_crown_depth_co)%r81d, &
           rio_nplant_co               => this%rvars(ir_nplant_co)%r81d, &
           rio_gpp_acc_co              => this%rvars(ir_gpp_acc_co)%r81d, &
           rio_npp_acc_co              => this%rvars(ir_npp_acc_co)%r81d, &
@@ -3009,6 +3017,7 @@ contains
                 ccohort%coage        = rio_coage_co(io_idx_co)
                 ccohort%g_sb_laweight= rio_g_sb_laweight_co(io_idx_co)
                 ccohort%hite         = rio_height_co(io_idx_co)
+                ccohort%crown_depth  = rio_crown_depth_co(io_idx_co)
                 ccohort%n            = rio_nplant_co(io_idx_co)
                 ccohort%gpp_acc      = rio_gpp_acc_co(io_idx_co)
                 ccohort%npp_acc      = rio_npp_acc_co(io_idx_co)
