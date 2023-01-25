@@ -213,6 +213,7 @@ module EDTypesMod
      real(r8) ::  dbh                                    ! dbh: cm
      real(r8) ::  coage                                  ! cohort age in years
      real(r8) ::  hite                                   ! height: meters
+     real(r8) ::  crown_depth                            ! height of the crown: meters !For DRM
      integer  ::  indexnumber                            ! unique number for each cohort. (within clump?)
      real(r8) ::  leafmemory                             ! target leaf biomass- set from previous year: kGC per indiv
      real(r8) ::  sapwmemory                             ! target sapwood biomass- set from previous year: kGC per indiv
@@ -1040,6 +1041,7 @@ module EDTypesMod
      write(fates_log(),*) 'co%n                      = ', ccohort%n                         
      write(fates_log(),*) 'co%dbh                    = ', ccohort%dbh                                        
      write(fates_log(),*) 'co%hite                   = ', ccohort%hite
+     write(fates_log(),*) 'co%crown_depth            = ', ccohort%crown_depth
      write(fates_log(),*) 'co%coage                  = ', ccohort%coage
      write(fates_log(),*) 'co%leafmemory             = ', ccohort%leafmemory
      write(fates_log(),*) 'co%sapwmemory             = ', ccohort%sapwmemory
