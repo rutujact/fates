@@ -808,7 +808,7 @@ contains
          hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index = ir_height_co )
 
     call this%set_restart_var(vname='fates_crown_depth', vtype=cohort_r8, &
-         long_name='ed cohort - plant crown depth fraction', units='fraction', flushval = flushzero,
+         long_name='ed cohort - plant crown depth fraction', units='fraction', flushval = flushzero, &
          hlms='CLM:ALM', initialize=initialize_variables, ivar=ivar, index =ir_crown_depth_co )
 
     call this%set_restart_var(vname='fates_nplant', vtype=cohort_r8, &
