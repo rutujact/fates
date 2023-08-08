@@ -45,7 +45,7 @@ module FatesLitterMod
    private
 
 
-   integer, public, parameter :: ncwd  = 4    ! number of coarse woody debris pools 
+   integer, public, parameter :: ncwd  = 2    ! number of coarse woody debris pools 
                                               ! (twig,s branch,l branch, trunk)
 
    integer, public, parameter :: ndcmpy = 3   ! number of "decomposability" pools in
