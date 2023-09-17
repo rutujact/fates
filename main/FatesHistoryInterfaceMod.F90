@@ -8034,13 +8034,13 @@ end subroutine update_history_hifrq
 
        call this%set_history_var(vname='FATES_STEM_H2O_SZPF', units='m3 m-3',   &
              long='stem volumetric water content by size class x pft',         &
-             use_default='inactive', avgflag='A', vtype=site_size_pft_r8,      &
+             use_default='active', avgflag='A', vtype=site_size_pft_r8,      &
              hlms='CLM:ALM', upfreq=4, ivar=ivar,                              &
              initialize=initialize_variables, index = ih_sth_scpf)
 
        call this%set_history_var(vname='FATES_LEAF_H2O_SZPF', units='m3 m-3',   &
              long='leaf volumetric water content by size class x pft',         &
-             use_default='inactive', avgflag='A', vtype=site_size_pft_r8,      &
+             use_default='active', avgflag='A', vtype=site_size_pft_r8,      &
              hlms='CLM:ALM', upfreq=4, ivar=ivar,                              &
              initialize=initialize_variables, index = ih_lth_scpf)
 
@@ -8177,13 +8177,13 @@ end subroutine update_history_hifrq
 
        call this%set_history_var(vname='FATES_VEGH2O', units = 'kg m-2',       &
              long='water stored inside vegetation tissues (leaf, stem, roots)', &
-             use_default='inactive', avgflag='A', vtype=site_r8,               &
+             use_default='active', avgflag='A', vtype=site_r8,               &
              hlms='CLM:ALM', upfreq=4, ivar=ivar,                              &
              initialize=initialize_variables, index = ih_h2oveg_si)
 
        call this%set_history_var(vname='FATES_VEGH2O_DEAD', units = 'kg m-2',  &
              long='cumulative water stored in dead biomass due to mortality',  &
-             use_default='inactive', avgflag='A', vtype=site_r8,               &
+             use_default='active', avgflag='A', vtype=site_r8,               &
              hlms='CLM:ALM', upfreq=1, ivar=ivar,                              &
              initialize=initialize_variables, index = ih_h2oveg_dead_si)
 
